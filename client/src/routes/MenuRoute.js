@@ -21,7 +21,6 @@ function MenuRoute() {
   return (
     <div className="App">
       <ChakraProvider theme={customTheme} backgroundColor="#ffc529">
-        <Status />
         <Box className="search-bar-container">
           <SearchBar setResults={setResults} results={results} />
         </Box>

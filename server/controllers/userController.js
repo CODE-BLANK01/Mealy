@@ -49,7 +49,7 @@ const getAllUsers = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const updatedUser = await userModel.findOneAndUpdate(
-      { _id: req.params.userId }, // Use an object to specify the filter
+      { _id: req.params.userid }, // Use an object to specify the filter
       req.body,
       { new: true } // Return the updated document
     );

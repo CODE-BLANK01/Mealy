@@ -29,7 +29,6 @@ const UserProfile = () => {
   const [editableFields, setEditableFields] = useState({
     username: user ? user.authUser.username : "",
     email: user ? user.authUser.email : "",
-    password: "", // Don't display passwords in the UI
   });
   const handleAddToCart = (meal) => {
     addToCart(meal._id);
@@ -65,13 +64,14 @@ const UserProfile = () => {
         const updatedUserData = await response.json();
         console.log(updatedUserData);
         // Update the user context with the updated data
-        setUser((prevUser) => ({
-          ...prevUser,
+        const updatedUser = response.data;
+        setUser({
+          ...user,
           authUser: {
-            ...prevUser.authUser,
-            ...updatedUserData, // Use the data returned from the server
+            ...user.authUser,
+            ...updatedUser,
           },
-        }));
+        });
         // Exit edit mode
         setIsEditMode(false);
       } else {
@@ -87,7 +87,6 @@ const UserProfile = () => {
     setEditableFields({
       username: user ? user.authUser.username : "",
       email: user ? user.authUser.email : "",
-      password: "", // Don't display passwords in the UI
     });
   }, [user]);
 
@@ -115,7 +114,7 @@ const UserProfile = () => {
       >
         <VStack spacing={5} mt={4} color="#272D2FB2">
           <Input
-            defaultValue={editableFields.name}
+            defaultValue={editableFields.username}
             fontSize="2xl"
             fontWeight="bold"
             textAlign="left"
@@ -131,26 +130,6 @@ const UserProfile = () => {
             borderColor={"#272D2FB2"}
             onChange={(e) => handleInputChange("email", e.target.value)}
           />
-          <Input
-            placeholder="Password"
-            type="password"
-            defaultValue=""
-            fontSize="lg"
-            readOnly={!isEditMode}
-            borderColor={"#272D2FB2"}
-            onChange={(e) => handleInputChange("password", e.target.value)}
-          />
-          <HStack>
-            <FaMapMarkerAlt color={"green.500"} mr={2} />
-            <Input
-              defaultValue={editableFields.address}
-              fontSize="lg"
-              textAlign="left"
-              readOnly={!isEditMode}
-              borderColor={"#272D2FB2"}
-              onChange={(e) => handleInputChange("address", e.target.value)}
-            />
-          </HStack>
 
           <Button
             colorScheme="teal"
@@ -158,10 +137,7 @@ const UserProfile = () => {
             justifyContent={{ base: "right" }}
             onClick={isEditMode ? handleSave : handleToggleEditMode}
             disabled={
-              !isEditMode &&
-              (!editableFields.name ||
-                !editableFields.email ||
-                !editableFields.address)
+              !isEditMode && (!editableFields.username || !editableFields.email)
             }
           >
             {isEditMode ? "Save" : "Edit"}
